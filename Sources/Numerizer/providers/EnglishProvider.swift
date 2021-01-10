@@ -278,7 +278,7 @@ class EnglishProvider: Provider {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
-    let pattern: String = #"<num>(\d+)( | and )<num>(\d+)(?=$|\W)"#
+    let pattern: String = #"<num>(\d+)(\s|\sand\s)<num>(\d+)(?=$|\W)"#
 
     guard let regex: NSRegularExpression = try? NSRegularExpression(
       pattern: pattern
