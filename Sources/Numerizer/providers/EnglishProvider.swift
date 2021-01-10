@@ -94,6 +94,7 @@ class EnglishProvider: Provider {
    The function performs the following operations on the given string:
    * combines multiple spaces
    * mutilates hyphenated words
+   * removes trailing articles
 
    - Parameters:
      - text: the string to prepare for processing
@@ -109,6 +110,11 @@ class EnglishProvider: Provider {
     string = string.replace(#"([^\d])-([^\d])"#) { (matches: [String]) -> String in
       "\(matches[1]) \(matches[2])"
     }
+
+    // Removes trailing articles
+    string = string
+      .replace(#"\ban?$"#, replacement: "")
+      .trimmingCharacters(in: .whitespacesAndNewlines)
 
     return string
   }
