@@ -146,9 +146,9 @@ class EnglishProvider: Provider {
       pattern
     }.joined(separator: "|")
     string = string.replace(#"(?<=^|\W)(\#(single_nums))\s(\#(tens_prefixes)|\#(direct_nums))(?=$|\W)"#) { (matches: [String]) -> String in
-      let one: String = matches[1]
-      let two: String = matches[2]
-      return "\(one) hundred \(two)"
+      let multiplier: String = matches[1]
+      let addendum: String = matches[2]
+      return "\(multiplier) hundred \(addendum)"
     }
 
     // Performs simple replacements
@@ -201,11 +201,11 @@ class EnglishProvider: Provider {
 
     // Calculates fractions as decmimals when preceeded by number
     string = string.replace(#"(\d+)(?:\s|\sand\s|-)+(?:<num>|\s)*(\d+)\s*\/\s*(\d+)"#) { (matches: [String]) -> String in
-      let one: Float = Float(matches[1])!
-      let two: Float = Float(matches[2])!
-      let three: Float = Float(matches[3])!
-      let frac: Float = one + (two / three)
-      return String(format: "%.3f", frac)
+      let whole: Float = Float(matches[1])!
+      let numerator: Float = Float(matches[2])!
+      let denominator: Float = Float(matches[3])!
+      let total: Float = whole + (numerator / denominator)
+      return String(format: "%.3f", total)
     }
 
     // Processes unpreceeded fractions
@@ -236,9 +236,9 @@ class EnglishProvider: Provider {
     string = andition(string) // first andition, for the tens before the hundreds
     for (pattern, num) in BIG_SUFFIXES {
       string = string.replace(#"(?:<num>)?(\d*)\s?\#(pattern)"#) { (matches: [String]) -> String in
-        let one: Int = Int(matches[1]) ?? 1
-        let big: Int = num * one
-        return "<num>\(String(big))"
+        let base: Int = Int(matches[1]) ?? 1
+        let total: Int = num * base
+        return "<num>\(String(total))"
       }
       string = andition(string)
     }
@@ -290,13 +290,13 @@ class EnglishProvider: Provider {
     ).count > 0 {
       string = string.replace(pattern) { (matches: [String]) -> String in
         let one: String = matches[1]
-        let two: String = matches[2]
-        let three: String = matches[3]
+        let two: String = matches[3]
+        let conjunction: String = matches[2]
 
-        if two.contains("and") || one.count > three.count {
-          let oneNum: Int = Int(one)!
-          let threeNum: Int = Int(three)!
-          return "<num>\(oneNum + threeNum)"
+        if conjunction.contains("and") || one.count > two.count {
+          let numOne: Int = Int(one)!
+          let numTwo: Int = Int(two)!
+          return "<num>\(numOne + numTwo)"
         } else {
           return matches[0] // the string, as it was
         }
