@@ -77,7 +77,7 @@ class EnglishProvider: Provider {
     (pattern: "ninths?",            num: 9),
   ]
 
-  private static let TEN_PREFIX_FRACTIONS: [(pattern: String, num: Int)] = [
+  private static let TENS_PREFIX_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "twentieths?",        num: 20),
     (pattern: "thirtieths?",        num: 30),
     (pattern: "fortieths?",         num: 40),
@@ -187,7 +187,7 @@ class EnglishProvider: Provider {
     var string: String = text.copy() as! String
 
     // Performs simple replacements
-    for (pattern, num) in DIRECT_NUM_FRACTIONS + SINGLE_NUM_FRACTIONS + TEN_PREFIX_FRACTIONS {
+    for (pattern, num) in DIRECT_NUM_FRACTIONS + SINGLE_NUM_FRACTIONS + TENS_PREFIX_FRACTIONS {
       string = string
         .replace(#"an?\s\#(pattern)(?=$|\W)"#, replacement: "<num>1/\(num)")
         .replace(#"(^|\W)\#(pattern)(?=$|\W)"#, replacement: "/\(num)")
