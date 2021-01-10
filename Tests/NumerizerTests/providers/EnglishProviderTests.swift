@@ -2,6 +2,89 @@ import XCTest
 @testable import Numerizer
 
 final class EnglishProviderTests: XCTestCase {
+  /*
+   preProcess
+   */
+
+  func testMultipleSpaces() {
+    let testCases: [String: String] = [
+      "twenty   one":  "twenty one",
+    ]
+    for (input, output): (String, String) in testCases {
+      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+    }
+  }
+
+  func testHyphens() {
+    let testCases: [String: String] = [
+      "twenty-one": "twenty one",
+    ]
+    for (input, output): (String, String) in testCases {
+      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+    }
+  }
+
+  func testTrailingArticles() {
+    let testCases: [String: String] = [
+      "twenty a":  "twenty",
+      "twenty an": "twenty",
+    ]
+    for (input, output): (String, String) in testCases {
+      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+    }
+  }
+
+  /*
+   postProcess
+   */
+
+  func testLeftoverNums() {
+    let testCases: [String: String] = [
+      "<num>20": "20",
+    ]
+    for (input, output): (String, String) in testCases {
+      XCTAssertEqual(EnglishProvider.postProcess(input), output)
+    }
+  }
+
+  /*
+   Test numerals
+   */
+
+  func testImplicitHundredsWithTensPrefixes() {
+    let testCases: [String: Int] = [
+      "two twenty":  220,
+      "two thirty":  230,
+      "two forty":   240,
+      "two fifty":   250,
+      "two sixty":   260,
+      "two seventy": 270,
+      "two eighty":  280,
+      "two ninety":  290,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testImplicitHundredsWithDirectNums() {
+    let testCases: [String: Int] = [
+      "two ten":       210,
+      "two eleven":    211,
+      "two twelve":    212,
+      "two thirteen":  213,
+      "two fourteen":  214,
+      "two fifteen":   215,
+      "two sixteen":   216,
+      "two seventeen": 217,
+      "two eighteen":  218,
+      "two nineteen":  219,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
   func testDirectNums() {
     let testCases: [String: Int] = [
       "zero":       0,
@@ -17,7 +100,7 @@ final class EnglishProviderTests: XCTestCase {
       "nineteen":  19,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(EnglishProvider.process(words), String(num))
     }
   }
 
@@ -34,23 +117,7 @@ final class EnglishProviderTests: XCTestCase {
       "nine":  9,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-    }
-  }
-
-  func testTenPrefixes() {
-    let testCases: [String: Int] = [
-      "twenty":  20,
-      "thirty":  30,
-      "forty":   40,
-      "fifty":   50,
-      "sixty":   60,
-      "seventy": 70,
-      "eighty":  80,
-      "ninety":  90,
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(EnglishProvider.process(words), String(num))
     }
   }
 
@@ -70,106 +137,25 @@ final class EnglishProviderTests: XCTestCase {
     }
   }
 
-  func testBigSuffixes() {
+  func testTenPrefixes() {
     let testCases: [String: Int] = [
-      "hundred":  Int(1e2),
-      "thousand": Int(1e3),
-      "lakh":     Int(1e5),
-      "million":  Int(1e6),
-      "crore":    Int(1e7),
-      "billion":  Int(1e9),
-      "trillion": Int(1e12),
+      "twenty":  20,
+      "thirty":  30,
+      "forty":   40,
+      "fifty":   50,
+      "sixty":   60,
+      "seventy": 70,
+      "eighty":  80,
+      "ninety":  90,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-      XCTAssertEqual(numerize("a \(words)"), String(num))
+      XCTAssertEqual(EnglishProvider.process(words), String(num))
     }
   }
 
-  func testBigSuffixesWithDirectNums() {
-    let testCases: [String: Int] = [
-      "eleven hundred":  Int(11e2), // Indian colloquial
-      "eleven thousand": Int(11e3),
-      "eleven lakh":     Int(11e5),
-      "eleven million":  Int(11e6),
-      "eleven crore":    Int(11e7),
-      "eleven billion":  Int(11e9),
-      "eleven trillion": Int(11e12),
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-    }
-  }
-
-  func testBigSuffixesWithSingleNums() {
-    let testCases: [String: Int] = [
-      "two hundred":  Int(2e2),
-      "two thousand": Int(2e3),
-      "two lakh":     Int(2e5),
-      "two million":  Int(2e6),
-      "two crore":    Int(2e7),
-      "two billion":  Int(2e9),
-      "two trillion": Int(2e12),
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-    }
-  }
-
-  func testBigSuffixesWithTenPrefixes() {
-    let testCases: [String: Int] = [
-      "twenty hundred":  Int(2e3), // Just call it a thousand!
-      "twenty thousand": Int(2e4),
-      "twenty lakh":     Int(2e6),
-      "twenty million":  Int(2e7),
-      "twenty crore":    Int(2e8),
-      "twenty billion":  Int(2e10),
-      "twenty trillion": Int(2e13),
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-    }
-  }
-
-  func testBigSuffixesWithDoubleDigitNums() {
-    let testCases: [String: Int] = [
-      "twenty two hundred":  Int(22e2), // Indian colloquial
-      "twenty two thousand": Int(22e3),
-      "twenty two lakh":     Int(22e5),
-      "twenty two million":  Int(22e6),
-      "twenty two crore":    Int(22e7),
-      "twenty two billion":  Int(22e9),
-      "twenty two trillion": Int(22e12),
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-    }
-  }
-
-  func testDirectNumFractions() {
-    let testCases: [String: Int] = [
-      "tenth":       10,
-      "twelfth":     12,
-      "eleventh":    11, // starts with a vowel
-      "thirteenth":  13,
-      "fourteenth":  14,
-      "fifteenth":   15,
-      "sixteenth":   16,
-      "seventeenth": 17,
-      "eighteenth":  18, // starts with a vowel
-      "nineteenth":  19,
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), "1/\(num)")
-      if ["a", "e", "i", "o", "u"].contains(where: { item in
-        words.starts(with: item)
-      }) {
-        XCTAssertEqual(numerize("an \(words)"), "1/\(num)")
-      } else {
-        XCTAssertEqual(numerize("a \(words)"), "1/\(num)")
-      }
-    }
-  }
+  /*
+   Test fractions
+   */
 
   func testDirectNumFractionsWithNumerator() {
     let testCases: [String: Int] = [
@@ -186,33 +172,6 @@ final class EnglishProviderTests: XCTestCase {
     ]
     for (words, num): (String, Int) in testCases {
       XCTAssertEqual(numerize("two \(words)"), "2/\(num)")
-    }
-  }
-
-  func testDirectNumFractionsWithNumeratorAndInteger() {
-    let testCases: [String: String] = [
-      "one and two tenths":   "1.200",
-      "one and two twelfths": "1.167",
-    ]
-    for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
-    }
-  }
-
-  func testSingleNumFractions() {
-    let testCases: [String: Int] = [
-      "half":    2,
-      "third":   3,
-      "fourth":  4,
-      "quarter": 4,
-      "fifth":   5,
-      "sixth":   6,
-      "seventh": 7,
-      "eighth":  8,
-      "ninth":   9,
-    ]
-    for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize("a \(words)"), "1/\(num)")
     }
   }
 
@@ -233,7 +192,113 @@ final class EnglishProviderTests: XCTestCase {
     }
   }
 
-  func testSingleNumFractionsWithNumeratorAndInteger() {
+  func testTensPrefixFractionsWithNumerator() {
+    let testCases: [String: Int] = [
+      "twentieths":  20,
+      "thirtieths":  30,
+      "fortieths":   40,
+      "fiftieths":   50,
+      "sixtieths":   60,
+      "seventieths": 70,
+      "eightieths":  80,
+      "ninetieths":  90,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize("two \(words)"), "2/\(num)")
+    }
+  }
+
+  func testDirectNumFractions() {
+    let testCases: [String: Int] = [
+      "tenth":       10,
+      "twelfth":     12,
+      "eleventh":    11, // starts with a vowel
+      "thirteenth":  13,
+      "fourteenth":  14,
+      "fifteenth":   15,
+      "sixteenth":   16,
+      "seventeenth": 17,
+      "eighteenth":  18, // starts with a vowel
+      "nineteenth":  19,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      if ["a", "e", "i", "o", "u"].contains(where: { item in
+        words.starts(with: item)
+      }) {
+        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+      } else {
+        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+      }
+    }
+  }
+
+  func testSingleNumFractions() {
+    let testCases: [String: Int] = [
+      "half":    2,
+      "third":   3,
+      "fourth":  4,
+      "quarter": 4,
+      "fifth":   5,
+      "sixth":   6,
+      "seventh": 7,
+      "eighth":  8,
+      "ninth":   9,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      if ["a", "e", "i", "o", "u"].contains(where: { item in
+        words.starts(with: item)
+      }) {
+        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+      } else {
+        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+      }
+    }
+  }
+
+  func testTensPrefixFractions() {
+    let testCases: [String: Int] = [
+      "twentieths":  20,
+      "thirtieths":  30,
+      "fortieths":   40,
+      "fiftieths":   50,
+      "sixtieths":   60,
+      "seventieths": 70,
+      "eightieths":  80,
+      "ninetieths":  90,
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      if ["a", "e", "i", "o", "u"].contains(where: { item in
+        words.starts(with: item)
+      }) {
+        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+      } else {
+        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+      }
+    }
+  }
+
+  func testDirectNumFractionsWithNumeratorAndWhole() {
+    let testCases: [String: String] = [
+      "one and two tenths":       "1.200",
+      "one and two elevenths":    "1.182",
+      "one and two twelfths":     "1.167",
+      "one and two thirteenths":  "1.154",
+      "one and two fourteenths":  "1.143",
+      "one and two fifteenths":   "1.133",
+      "one and two sixteenths":   "1.125",
+      "one and two seventeenths": "1.118",
+      "one and two eighteenths":  "1.111",
+      "one and two nineteenths":  "1.105",
+    ]
+    for (words, num): (String, String) in testCases {
+      XCTAssertEqual(numerize(words), num)
+    }
+  }
+
+  func testSingleNumFractionsWithNumeratorAndWhole() {
     let testCases: [String: String] = [
       "one and two halves":   "2.000",
       "one and two thirds":   "1.667",
@@ -250,15 +315,156 @@ final class EnglishProviderTests: XCTestCase {
     }
   }
 
+  func testTensPrefixFractionsWithNumeratorAndWhole() {
+    let testCases: [String: String] = [
+      "one and two twentieths":    "1.100",
+      "one and three thirtieths":  "1.100",
+      "one and four fortieths":    "1.100",
+      "one and five fiftieths":    "1.100",
+      "one and six sixtieths":     "1.100",
+      "one and seven seventieths": "1.100",
+      "one and eight eightieths":  "1.100",
+      "one and nine ninetieths":   "1.100",
+    ]
+    for (words, num): (String, String) in testCases {
+      XCTAssertEqual(numerize(words), num)
+    }
+  }
+
+  /*
+   Test big suffixes
+   */
+
+  func testBigSuffixes() {
+    let testCases: [String: Int] = [
+      "hundred":  Int(1e2),
+      "thousand": Int(1e3),
+      "lakh":     Int(1e5),
+      "million":  Int(1e6),
+      "crore":    Int(1e7),
+      "billion":  Int(1e9),
+      "trillion": Int(1e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(EnglishProvider.process(words), String(num))
+      XCTAssertEqual(EnglishProvider.process("a \(words)"), String(num))
+    }
+  }
+
+  func testBigSuffixesOnImplicitHundredsWithTensPrefixes() {
+    let testCases: [String: Int] = [
+      "one twenty thousand": Int(120e3),
+      "one twenty lakh":     Int(120e5),
+      "one twenty million":  Int(120e6),
+      "one twenty crore":    Int(120e7),
+      "one twenty billion":  Int(120e9),
+      "one twenty trillion": Int(120e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnImplicitHundredsWithDirectNums() {
+    let testCases: [String: Int] = [
+      "two nineteen thousand": Int(219e3),
+      "two nineteen lakh":     Int(219e5),
+      "two nineteen million":  Int(219e6),
+      "two nineteen crore":    Int(219e7),
+      "two nineteen billion":  Int(219e9),
+      "two nineteen trillion": Int(219e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnDirectNums() {
+    let testCases: [String: Int] = [
+      "eleven hundred":  Int(11e2), // Indian colloquial
+      "eleven thousand": Int(11e3),
+      "eleven lakh":     Int(11e5),
+      "eleven million":  Int(11e6),
+      "eleven crore":    Int(11e7),
+      "eleven billion":  Int(11e9),
+      "eleven trillion": Int(11e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnSingleNums() {
+    let testCases: [String: Int] = [
+      "two hundred":  Int(2e2),
+      "two thousand": Int(2e3),
+      "two lakh":     Int(2e5),
+      "two million":  Int(2e6),
+      "two crore":    Int(2e7),
+      "two billion":  Int(2e9),
+      "two trillion": Int(2e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnDoubleDigitNums() {
+    let testCases: [String: Int] = [
+      "twenty two hundred":  Int(22e2), // Indian colloquial
+      "twenty two thousand": Int(22e3),
+      "twenty two lakh":     Int(22e5),
+      "twenty two million":  Int(22e6),
+      "twenty two crore":    Int(22e7),
+      "twenty two billion":  Int(22e9),
+      "twenty two trillion": Int(22e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnTenPrefixes() {
+    let testCases: [String: Int] = [
+      "twenty hundred":  Int(20e2), // Better to say 'two thousand'
+      "twenty thousand": Int(20e3),
+      "twenty lakh":     Int(20e5),
+      "twenty million":  Int(20e6),
+      "twenty crore":    Int(20e7),
+      "twenty billion":  Int(20e9),
+      "twenty trillion": Int(20e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+    }
+  }
+
+  func testBigSuffixesOnSmallerBigSuffixes() {
+    let testCases: [String: Int] = [
+      "hundred thousand": Int(100e3),
+      "hundred lakh":     Int(100e5), // Better to say 'crore'
+      "hundred million":  Int(100e6),
+      "hundred crore":    Int(100e7),
+      "hundred billion":  Int(100e9),
+      "hundred trillion": Int(100e12),
+    ]
+    for (words, num): (String, Int) in testCases {
+      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(numerize("a \(words)"), String(num))
+    }
+  }
+
+  /**
+   Test complex combinations
+   */
+
   func testComplexIntCombinations() {
     let testCases: [String: Int] = [
-      "nine hundred ninety nine": 999, // missing 'and'
-      "twenty   one":              21, // multiple spaces
-      "twentyone":                 21, // no spaces
-      "100 thousand":        Int(1e5), // numbers and strings
-      "a billion":           Int(1e9), // article instead of number
-      "one fifty five":           155, // missing 'hundred'
-      "two nineteen":             219, // missing 'hundred'
+      "a thousand and a hundred": 1100, // non-trailing 'a's
+      "nine hundred ninety nine":  999, // missing 'and'
+      "twentyone":                  21, // no spaces
+      "100 thousand":         Int(1e5), // numbers and strings
+      "million billion":     Int(1e15), // big suffix on smaller big suffix
     ]
     for (words, num): (String, Int) in testCases {
       XCTAssertEqual(numerize(words), String(num))
@@ -267,9 +473,46 @@ final class EnglishProviderTests: XCTestCase {
 
   func testComplexFloatCombinations() {
     let testCases: [String: String] = [
-      "two one fifth": "2.200", // missing 'and'
+      "two one fifth":    "2.200", // missing 'and'
       "zero and a fifth": "0.200", // zero as the integer
-      "two halves": "2/2" // not equal to 1
+      "two halves":         "2/2", // not equal to 1
+    ]
+    for (words, num): (String, String) in testCases {
+      XCTAssertEqual(numerize(words), num)
+    }
+  }
+
+  func testTotalCombination() {
+    let testCases: [String: String] = [
+      "two nineteen billion a hundred and fifty five million eleven thousand and ninety one and two fifths": "219155011091.400"
+    ]
+    for (words, num): (String, String) in testCases {
+      XCTAssertEqual(numerize(words), num)
+    }
+  }
+
+  func testExceptions() {
+    let testCases: [String: String] = [
+      "pennyweight": "pennyweight",
+    ]
+    for (words, num): (String, String) in testCases {
+      XCTAssertEqual(numerize(words), num)
+    }
+  }
+
+  /**
+   Tests time-related transformations for compatibility with
+   [Duri](https://github.com/dhruvkb/Duri), a related library for parsing
+   durations from natural language strings.
+
+   - SeeAlso: [Duri](https://github.com/dhruvkb/Duri)
+   */
+  func testDuriCompatibility() {
+    let testCases: [String: String] = [
+      "three and a half hours": "3.500 hours",
+      "21 Sep 2002 12:01am": "21 Sep 2002 12:01am",
+      "21/09/2002": "21/09/2002",
+//      "half an hour": "1/2 an hour",
     ]
     for (words, num): (String, String) in testCases {
       XCTAssertEqual(numerize(words), num)
