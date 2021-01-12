@@ -6,7 +6,9 @@ import Foundation
  - Authors: Dhruv Bhanushali
  */
 class EnglishProvider: Provider {
-  private static let DIRECT_NUMS: [(pattern: String, num: Int)] = [
+  required init() {}
+
+  private let DIRECT_NUMS: [(pattern: String, num: Int)] = [
     (pattern: "zero",               num:  0),
     (pattern: "ten",                num: 10),
     (pattern: "eleven",             num: 11),
@@ -20,7 +22,7 @@ class EnglishProvider: Provider {
     (pattern: "nineteen",           num: 19),
   ]
 
-  private static let SINGLE_NUMS: [(pattern: String, num: Int)] = [
+  private let SINGLE_NUMS: [(pattern: String, num: Int)] = [
     (pattern: "one",                num: 1),
     (pattern: "two",                num: 2),
     (pattern: "three",              num: 3),
@@ -32,7 +34,7 @@ class EnglishProvider: Provider {
     (pattern: "nine",               num: 9),
   ]
 
-  private static let TENS_PREFIXES: [(pattern: String, num: Int)] = [
+  private let TENS_PREFIXES: [(pattern: String, num: Int)] = [
     (pattern: "twenty",             num: 2),
     (pattern: "thirty",             num: 3),
     (pattern: "forty",              num: 4),
@@ -43,7 +45,7 @@ class EnglishProvider: Provider {
     (pattern: "ninety",             num: 9),
   ]
 
-  private static let BIG_SUFFIXES: [(pattern: String, num: Int)] = [
+  private let BIG_SUFFIXES: [(pattern: String, num: Int)] = [
     (pattern: "hundred",            num: Int(1e2)),
     (pattern: "thousand",           num: Int(1e3)),
     (pattern: "lakh",               num: Int(1e5)),
@@ -53,7 +55,7 @@ class EnglishProvider: Provider {
     (pattern: "trillion",           num: Int(1e12)),
   ]
 
-  private static let DIRECT_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
+  private let DIRECT_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "tenths?",            num: 10),
     (pattern: "elevenths?",         num: 11),
     (pattern: "twelfths?",          num: 12),
@@ -66,7 +68,7 @@ class EnglishProvider: Provider {
     (pattern: "nineteenths?",       num: 19),
   ]
 
-  private static let SINGLE_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
+  private let SINGLE_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "hal(f|ves)",         num: 2),
     (pattern: "thirds?",            num: 3),
     (pattern: "(fourth|quarter)s?", num: 4),
@@ -77,7 +79,7 @@ class EnglishProvider: Provider {
     (pattern: "ninths?",            num: 9),
   ]
 
-  private static let TENS_PREFIX_FRACTIONS: [(pattern: String, num: Int)] = [
+  private let TENS_PREFIX_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "twentieths?",        num: 20),
     (pattern: "thirtieths?",        num: 30),
     (pattern: "fortieths?",         num: 40),
@@ -100,7 +102,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string to prepare for processing
    */
-  static func preProcess(_ text: String) -> String {
+  func preProcess(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -135,7 +137,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  static func numerizeNumerals(_ text: String) -> String {
+  func numerizeNumerals(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -192,7 +194,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string from which to parse fractions
    */
-  static func numerizeFractions(_ text: String) -> String {
+  func numerizeFractions(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -232,7 +234,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  static func numerizeBigSuffixes(_ text: String) -> String {
+  func numerizeBigSuffixes(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -261,7 +263,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string to clean up after processing
    */
-  static func postProcess(_ text: String) -> String {
+  func postProcess(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -278,7 +280,7 @@ class EnglishProvider: Provider {
    - Parameters:
      - text: the string in which to add qualifying numbers
    */
-  private static func andition(_ text: String) -> String {
+  private func andition(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 

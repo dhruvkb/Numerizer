@@ -6,13 +6,15 @@
  - Authors: Dhruv Bhanushali
  */
 protocol Provider {
+  init()
+
   /**
    Prepares the given string for processing.
 
    - Parameters:
      - text: the string to prepare for processing
    */
-  static func preProcess(_ text: String) -> String
+  func preProcess(_ text: String) -> String
 
   /**
    Parses straight-forward numerals from the given string.
@@ -20,7 +22,7 @@ protocol Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  static func numerizeNumerals(_ text: String) -> String
+  func numerizeNumerals(_ text: String) -> String
 
   /**
    Parses fractions from the given string.
@@ -28,7 +30,7 @@ protocol Provider {
    - Parameters:
      - text: the string from which to parse fractions
    */
-  static func numerizeFractions(_ text: String) -> String
+  func numerizeFractions(_ text: String) -> String
 
   /**
    Parses numerals with big suffixes from the given string.
@@ -36,7 +38,7 @@ protocol Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  static func numerizeBigSuffixes(_ text: String) -> String
+  func numerizeBigSuffixes(_ text: String) -> String
 
   /**
    Cleans up the given string after processing.
@@ -44,7 +46,7 @@ protocol Provider {
    - Parameters:
      - text: the string to clean up after processing
    */
-  static func postProcess(_ text: String) -> String
+  func postProcess(_ text: String) -> String
 }
 
 extension Provider {
@@ -61,7 +63,7 @@ extension Provider {
    - Parameters:
      - text: the text in which to replace numeric words with numbers
    */
-  static func process(_ text: String) -> String {
+  func process(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
