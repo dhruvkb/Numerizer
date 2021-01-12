@@ -28,7 +28,7 @@ public class Numerizer {
    - Parameters:
      - localeChoice: one of the values of the enum `LocaleChoice`
    - Throws: `NumerizerErrors.unsupportedLocale` if locale choice does not have
-             an associated provider.
+             an associated provider
    */
   public init(localeChoice: LocaleChoice) throws {
     guard let Provider: Provider.Type = providers[localeChoice] else {
