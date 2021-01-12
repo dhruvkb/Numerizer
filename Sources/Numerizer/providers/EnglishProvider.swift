@@ -92,6 +92,7 @@ class EnglishProvider: Provider {
    Prepares the given string for processing.
 
    The function performs the following operations on the given string:
+   * lowercases the string
    * combines multiple spaces
    * mutilates hyphenated words
    * removes trailing articles
@@ -102,6 +103,9 @@ class EnglishProvider: Provider {
   static func preProcess(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
+
+    // Lowercases the string
+    string = string.lowercased()
 
     // Combines multiple spaces
     string = string.replace(#"\s+"#, replacement: " ")

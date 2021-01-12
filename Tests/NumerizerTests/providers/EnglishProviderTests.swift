@@ -6,6 +6,15 @@ final class EnglishProviderTests: XCTestCase {
    preProcess
    */
 
+  func testCaseNormalization() {
+    let testCases: [String: String] = [
+      "tWeNtY   One":  "twenty one",
+    ]
+    for (input, output): (String, String) in testCases {
+      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+    }
+  }
+
   func testMultipleSpaces() {
     let testCases: [String: String] = [
       "twenty   one":  "twenty one",
@@ -510,7 +519,7 @@ final class EnglishProviderTests: XCTestCase {
   func testDuriCompatibility() {
     let testCases: [String: String] = [
       "three and a half hours": "3.500 hours",
-      "21 Sep 2002 12:01am": "21 Sep 2002 12:01am",
+      "21 Sep 2002 12:01am": "21 sep 2002 12:01am",
       "21/09/2002": "21/09/2002",
 //      "half an hour": "1/2 an hour",
     ]
