@@ -38,6 +38,7 @@ extension String {
      - matches: an array containing:
        - 0: the entire matching substring
        - 1...n: capturing groups 1 through n
+   - Returns: A new string with the occurrences replaced
    */
   func replace(
     _ pattern: String,
@@ -114,6 +115,7 @@ extension String {
      - pattern: the pattern to replace in the string
      - options: the options to use for the regex pattern
      - replacement: the string to replace the matching pattern
+   - Returns: A new string with the occurrences replaced
    */
   func replace(
     _ pattern: String,
