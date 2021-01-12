@@ -2,6 +2,8 @@ import XCTest
 @testable import Numerizer
 
 final class EnglishProviderTests: XCTestCase {
+  var provider: EnglishProvider = EnglishProvider()
+
   /*
    preProcess
    */
@@ -11,7 +13,7 @@ final class EnglishProviderTests: XCTestCase {
       "tWeNtY   One":  "twenty one",
     ]
     for (input, output): (String, String) in testCases {
-      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+      XCTAssertEqual(provider.preProcess(input), output)
     }
   }
 
@@ -20,7 +22,7 @@ final class EnglishProviderTests: XCTestCase {
       "twenty   one":  "twenty one",
     ]
     for (input, output): (String, String) in testCases {
-      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+      XCTAssertEqual(provider.preProcess(input), output)
     }
   }
 
@@ -29,7 +31,7 @@ final class EnglishProviderTests: XCTestCase {
       "twenty-one": "twenty one",
     ]
     for (input, output): (String, String) in testCases {
-      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+      XCTAssertEqual(provider.preProcess(input), output)
     }
   }
 
@@ -39,7 +41,7 @@ final class EnglishProviderTests: XCTestCase {
       "twenty an": "twenty",
     ]
     for (input, output): (String, String) in testCases {
-      XCTAssertEqual(EnglishProvider.preProcess(input), output)
+      XCTAssertEqual(provider.preProcess(input), output)
     }
   }
 
@@ -52,7 +54,7 @@ final class EnglishProviderTests: XCTestCase {
       "<num>20": "20",
     ]
     for (input, output): (String, String) in testCases {
-      XCTAssertEqual(EnglishProvider.postProcess(input), output)
+      XCTAssertEqual(provider.postProcess(input), output)
     }
   }
 
@@ -72,7 +74,7 @@ final class EnglishProviderTests: XCTestCase {
       "two ninety":  290,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -90,7 +92,7 @@ final class EnglishProviderTests: XCTestCase {
       "two nineteen":  219,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -109,7 +111,7 @@ final class EnglishProviderTests: XCTestCase {
       "nineteen":  19,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -126,7 +128,7 @@ final class EnglishProviderTests: XCTestCase {
       "nine":  9,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -142,7 +144,7 @@ final class EnglishProviderTests: XCTestCase {
       "ninety two":  92,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -158,7 +160,7 @@ final class EnglishProviderTests: XCTestCase {
       "ninety":  90,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -180,7 +182,7 @@ final class EnglishProviderTests: XCTestCase {
       "nineteenths":  19,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize("two \(words)"), "2/\(num)")
+      XCTAssertEqual(provider.process("two \(words)"), "2/\(num)")
     }
   }
 
@@ -197,7 +199,7 @@ final class EnglishProviderTests: XCTestCase {
       "ninths":   9,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize("two \(words)"), "2/\(num)")
+      XCTAssertEqual(provider.process("two \(words)"), "2/\(num)")
     }
   }
 
@@ -213,7 +215,7 @@ final class EnglishProviderTests: XCTestCase {
       "ninetieths":  90,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize("two \(words)"), "2/\(num)")
+      XCTAssertEqual(provider.process("two \(words)"), "2/\(num)")
     }
   }
 
@@ -231,13 +233,13 @@ final class EnglishProviderTests: XCTestCase {
       "nineteenth":  19,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      XCTAssertEqual(provider.process(words), "1/\(num)")
       if ["a", "e", "i", "o", "u"].contains(where: { item in
         words.starts(with: item)
       }) {
-        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("an \(words)"), "1/\(num)")
       } else {
-        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("a \(words)"), "1/\(num)")
       }
     }
   }
@@ -255,13 +257,13 @@ final class EnglishProviderTests: XCTestCase {
       "ninth":   9,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      XCTAssertEqual(provider.process(words), "1/\(num)")
       if ["a", "e", "i", "o", "u"].contains(where: { item in
         words.starts(with: item)
       }) {
-        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("an \(words)"), "1/\(num)")
       } else {
-        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("a \(words)"), "1/\(num)")
       }
     }
   }
@@ -278,13 +280,13 @@ final class EnglishProviderTests: XCTestCase {
       "ninetieths":  90,
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), "1/\(num)")
+      XCTAssertEqual(provider.process(words), "1/\(num)")
       if ["a", "e", "i", "o", "u"].contains(where: { item in
         words.starts(with: item)
       }) {
-        XCTAssertEqual(EnglishProvider.process("an \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("an \(words)"), "1/\(num)")
       } else {
-        XCTAssertEqual(EnglishProvider.process("a \(words)"), "1/\(num)")
+        XCTAssertEqual(provider.process("a \(words)"), "1/\(num)")
       }
     }
   }
@@ -303,7 +305,7 @@ final class EnglishProviderTests: XCTestCase {
       "one and two nineteenths":  "1.105",
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -320,7 +322,7 @@ final class EnglishProviderTests: XCTestCase {
       "one and two ninths":   "1.222",
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -336,7 +338,7 @@ final class EnglishProviderTests: XCTestCase {
       "one and nine ninetieths":   "1.100",
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -355,8 +357,8 @@ final class EnglishProviderTests: XCTestCase {
       "trillion": Int(1e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(EnglishProvider.process(words), String(num))
-      XCTAssertEqual(EnglishProvider.process("a \(words)"), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
+      XCTAssertEqual(provider.process("a \(words)"), String(num))
     }
   }
 
@@ -370,7 +372,7 @@ final class EnglishProviderTests: XCTestCase {
       "one twenty trillion": Int(120e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -384,7 +386,7 @@ final class EnglishProviderTests: XCTestCase {
       "two nineteen trillion": Int(219e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -399,7 +401,7 @@ final class EnglishProviderTests: XCTestCase {
       "eleven trillion": Int(11e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -414,7 +416,7 @@ final class EnglishProviderTests: XCTestCase {
       "two trillion": Int(2e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -429,7 +431,7 @@ final class EnglishProviderTests: XCTestCase {
       "twenty two trillion": Int(22e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -444,7 +446,7 @@ final class EnglishProviderTests: XCTestCase {
       "twenty trillion": Int(20e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -458,8 +460,8 @@ final class EnglishProviderTests: XCTestCase {
       "hundred trillion": Int(100e12),
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
-      XCTAssertEqual(numerize("a \(words)"), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
+      XCTAssertEqual(provider.process("a \(words)"), String(num))
     }
   }
 
@@ -476,7 +478,7 @@ final class EnglishProviderTests: XCTestCase {
       "million billion":     Int(1e15), // big suffix on smaller big suffix
     ]
     for (words, num): (String, Int) in testCases {
-      XCTAssertEqual(numerize(words), String(num))
+      XCTAssertEqual(provider.process(words), String(num))
     }
   }
 
@@ -487,7 +489,7 @@ final class EnglishProviderTests: XCTestCase {
       "two halves":         "2/2", // not equal to 1
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -496,7 +498,7 @@ final class EnglishProviderTests: XCTestCase {
       "two nineteen billion a hundred and fifty five million eleven thousand and ninety one and two fifths": "219155011091.400"
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -505,7 +507,7 @@ final class EnglishProviderTests: XCTestCase {
       "pennyweight": "pennyweight",
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 
@@ -524,7 +526,7 @@ final class EnglishProviderTests: XCTestCase {
 //      "half an hour": "1/2 an hour",
     ]
     for (words, num): (String, String) in testCases {
-      XCTAssertEqual(numerize(words), num)
+      XCTAssertEqual(provider.process(words), num)
     }
   }
 }
