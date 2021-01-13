@@ -2,6 +2,21 @@ import XCTest
 @testable import Numerizer
 
 final class StringTests: XCTestCase {
+  func testMatchesPatternPresent() {
+    let isMatch = "Hello, World!".matchesPattern("Hello")
+    XCTAssertTrue(isMatch)
+  }
+
+  func testMatchesPatternAbsent() {
+    let isMatch = "Hello, World!".matchesPattern("Hi")
+    XCTAssertFalse(isMatch)
+  }
+
+  func testMatchesPatternCaseInsensitive() {
+    let isMatch = "Hello, World!".matchesPattern("hELLO", options: [.caseInsensitive])
+    XCTAssertTrue(isMatch)
+  }
+
   func testReplaceDynamic() {
     let string = "Hello, World!".replace(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
       let one: String = matches[1]

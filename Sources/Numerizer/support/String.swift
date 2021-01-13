@@ -6,6 +6,54 @@ import Foundation
  */
 extension String {
   /**
+   Check if the given pattern occurs in the string or not.
+
+   The function accepts a pattern string and an optional instance of
+   `NSRegularExpression.Options`.
+
+   ```swift
+   "Hello, World!".matchesPattern("Hello")
+   // true
+   ```
+
+   ```swift
+   "Hello, World!".matchesPattern("Hi")
+   // false
+   ```
+
+   Options can be passed to modify the behaviour of the `NSRegularExpression`
+   instance.
+
+   ```swift
+   "Hello, World!".matchesPattern("hELLO", options: [.caseInsensitive])
+   // true
+   ```
+
+   - Authors: Dhruv Bhanushali
+   - Parameters:
+     - pattern: the pattern to replace in the string
+     - options: the options to use for the regex pattern
+   - Returns: Whether the string contains the pattern
+   */
+  public func matchesPattern(
+    _ pattern: String,
+    options: NSRegularExpression.Options = []
+  ) -> Bool {
+    guard let regex: NSRegularExpression = try? NSRegularExpression(
+      pattern: pattern,
+      options: options
+    ) else { return false }
+
+    let matchCount: Int = regex.numberOfMatches(
+      in: self,
+      options: NSRegularExpression.MatchingOptions(rawValue: 0),
+      range: NSMakeRange(0, self.utf16.count)
+    )
+
+    return matchCount > 0
+  }
+
+  /**
    Replace the given pattern with a dynamically-generated replacement string.
    
    The function accepts a pattern string, an optional instance of
