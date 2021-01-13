@@ -30,7 +30,9 @@ public class Numerizer {
    - Throws: `NumerizerErrors.unsupportedLocale` if locale choice does not have
              an associated provider
    */
-  public init(localeChoice: LocaleChoice) throws {
+  public init(
+    localeChoice: LocaleChoice = LocaleChoice.en
+  ) throws {
     guard let Provider: Provider.Type = providers[localeChoice] else {
       throw NumerizerErrors.unsupportedLocale
     }
