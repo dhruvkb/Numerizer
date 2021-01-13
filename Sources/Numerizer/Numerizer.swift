@@ -46,11 +46,12 @@ public class Numerizer {
      - text: the text in which to replace numeric words with numbers
    - Returns: A new string with the numeric words replaced with numbers
    */
-  public func numerize(_ text: String) -> String {
-    /// Mutable copy of the text passed as argument
-    var string: String = text.copy() as! String
+  public func parse(_ text: String) -> String {
+    provider.process(text)
+  }
 
-    string = provider.process(string)
-    return string
+  @available(*, deprecated, renamed: "parse")
+  public func numerize(_ text: String) -> String {
+    parse(text)
   }
 }
