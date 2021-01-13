@@ -285,15 +285,7 @@ class EnglishProvider: Provider {
     var string: String = text.copy() as! String
 
     let pattern: String = #"<num>(\d+)(\s|\sand\s)<num>(\d+)(?=$|\W)"#
-
-    guard let regex: NSRegularExpression = try? NSRegularExpression(
-      pattern: pattern
-    ) else { return string }
-
-    while regex.matches(
-      in: string,
-      range: NSRange(location: 0, length: string.utf16.count)
-    ).count > 0 {
+    while string.matchesPattern(pattern) {
       string = string.replacePattern(pattern) { (matches: [String]) -> String in
         let one: String = matches[1]
         let two: String = matches[3]
