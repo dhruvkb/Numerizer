@@ -69,6 +69,18 @@ extension String {
    // "World, Hello!"
    ```
 
+   Options can be passed to modify the behaviour of the `NSRegularExpression`
+   instance.
+
+   ```swift
+   "Hello, World!".replace("hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
+     "Hi"
+   }
+   // "Hi, World!"
+   ```
+
+   This function replaces all occurrences of the pattern.
+
    ```swift
    "Hello, hello!".replace("ello") { (matches: [String]) -> String in
      "ola"
