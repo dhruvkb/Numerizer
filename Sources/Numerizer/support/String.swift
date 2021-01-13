@@ -61,7 +61,7 @@ extension String {
    argument and returns a replacement.
 
    ```swift
-   "Hello, World!".replace(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
+   "Hello, World!".replacePattern(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
      let one: String = matches[1]
      let two: String = matches[2]
      return "\(two), \(one)"
@@ -73,7 +73,7 @@ extension String {
    instance.
 
    ```swift
-   "Hello, World!".replace("hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
+   "Hello, World!".replacePattern("hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
      "Hi"
    }
    // "Hi, World!"
@@ -82,7 +82,7 @@ extension String {
    This function replaces all occurrences of the pattern.
 
    ```swift
-   "Hello, hello!".replace("ello") { (matches: [String]) -> String in
+   "Hello, hello!".replacePattern("ello") { (matches: [String]) -> String in
      "ola"
    }
    // "Hola, hola!"
@@ -100,7 +100,7 @@ extension String {
        - 1...n: capturing groups 1 through n
    - Returns: A new string with the occurrences replaced
    */
-  func replace(
+  public func replacePattern(
     _ pattern: String,
     options: NSRegularExpression.Options = [],
     replacer: (_ matches: [String]) -> String
@@ -164,7 +164,7 @@ extension String {
    instance of `NSRegularExpression.Options` and a replacement string.
 
    ```swift
-   "Hello, World!".replace("World", replacement: "Dhruv")
+   "Hello, World!".replacePattern("World", replacement: "Dhruv")
    // "Hello, Dhruv!"
    ```
 
@@ -177,12 +177,12 @@ extension String {
      - replacement: the string to replace the matching pattern
    - Returns: A new string with the occurrences replaced
    */
-  func replace(
+  public func replacePattern(
     _ pattern: String,
     options: NSRegularExpression.Options = [],
     replacement: String
   ) -> String {
-    replace(pattern, options: options) { _ -> String in
+    replacePattern(pattern, options: options) { _ -> String in
       replacement
     }
   }

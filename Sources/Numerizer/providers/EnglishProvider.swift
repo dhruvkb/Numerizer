@@ -110,16 +110,16 @@ class EnglishProvider: Provider {
     string = string.lowercased()
 
     // Combines multiple spaces
-    string = string.replace(#"\s+"#, replacement: " ")
+    string = string.replacePattern(#"\s+"#, replacement: " ")
 
     // Mutilates hyphenated words
-    string = string.replace(#"([^\d])-([^\d])"#) { (matches: [String]) -> String in
+    string = string.replacePattern(#"([^\d])-([^\d])"#) { (matches: [String]) -> String in
       "\(matches[1]) \(matches[2])"
     }
 
     // Removes trailing articles
     string = string
-      .replace(#"\ban?$"#, replacement: "")
+      .replacePattern(#"\ban?$"#, replacement: "")
       .trimmingCharacters(in: .whitespacesAndNewlines)
 
     return string
@@ -151,7 +151,7 @@ class EnglishProvider: Provider {
     let tens_prefixes: String = TENS_PREFIXES.map { (pattern: String, _) -> String in
       pattern
     }.joined(separator: "|")
-    string = string.replace(#"(?<=^|\W)(\#(single_nums))\s(\#(tens_prefixes)|\#(direct_nums))(?=$|\W)"#) { (matches: [String]) -> String in
+    string = string.replacePattern(#"(?<=^|\W)(\#(single_nums))\s(\#(tens_prefixes)|\#(direct_nums))(?=$|\W)"#) { (matches: [String]) -> String in
       let multiplier: String = matches[1]
       let addendum: String = matches[2]
       return "\(multiplier) hundred \(addendum)"
@@ -159,23 +159,23 @@ class EnglishProvider: Provider {
 
     // Performs simple replacements
     for (pattern, num) in DIRECT_NUMS + SINGLE_NUMS {
-      string = string.replace(#"(?<=^|\W)\#(pattern)(?=$|\W)"#) { (matches: [String]) -> String in
+      string = string.replacePattern(#"(?<=^|\W)\#(pattern)(?=$|\W)"#) { (matches: [String]) -> String in
         "<num>\(num)"
       }
     }
 
     // Replaces indefinite articles with 1
-    string = string.replace(#"(?<=^|\W)\ban?\b(?=$|\W)"#, replacement: "<num>1")
+    string = string.replacePattern(#"(?<=^|\W)\ban?\b(?=$|\W)"#, replacement: "<num>1")
 
     // Replaces two digit numbers that have tens' prefixes
     for (tp_pattern, tp_num) in TENS_PREFIXES {
       let tp_val: Int = tp_num * 10
       for (sn_pattern, sn_num) in SINGLE_NUMS {
-        string = string.replace(#"(?<=^|\W)\#(tp_pattern)\#(sn_pattern)(?=$|\W)"#) { (matches: [String]) -> String in
+        string = string.replacePattern(#"(?<=^|\W)\#(tp_pattern)\#(sn_pattern)(?=$|\W)"#) { (matches: [String]) -> String in
           "<num>\(tp_val + sn_num)"
         }
       }
-      string = string.replace(#"(?<=^|\W)\#(tp_pattern)(?=$|\W)"#) { (matches: [String]) -> String in
+      string = string.replacePattern(#"(?<=^|\W)\#(tp_pattern)(?=$|\W)"#) { (matches: [String]) -> String in
         "<num>\(tp_val)"
       }
     }
@@ -201,12 +201,12 @@ class EnglishProvider: Provider {
     // Performs simple replacements
     for (pattern, num) in DIRECT_NUM_FRACTIONS + SINGLE_NUM_FRACTIONS + TENS_PREFIX_FRACTIONS {
       string = string
-        .replace(#"an?\s\#(pattern)(?=$|\W)"#, replacement: "<num>1/\(num)")
-        .replace(#"(^|\W)\#(pattern)(?=$|\W)"#, replacement: "/\(num)")
+        .replacePattern(#"an?\s\#(pattern)(?=$|\W)"#, replacement: "<num>1/\(num)")
+        .replacePattern(#"(^|\W)\#(pattern)(?=$|\W)"#, replacement: "/\(num)")
     }
 
     // Calculates fractions as decmimals when preceeded by number
-    string = string.replace(#"(\d+)(?:\s|\sand\s|-)+(?:<num>|\s)*(\d+)\s*\/\s*(\d+)"#) { (matches: [String]) -> String in
+    string = string.replacePattern(#"(\d+)(?:\s|\sand\s|-)+(?:<num>|\s)*(\d+)\s*\/\s*(\d+)"#) { (matches: [String]) -> String in
       let whole: Float = Float(matches[1])!
       let numerator: Float = Float(matches[2])!
       let denominator: Float = Float(matches[3])!
@@ -216,9 +216,9 @@ class EnglishProvider: Provider {
 
     // Processes unpreceeded fractions
     string = string
-      .replace(#"(?:^|\W)\/(\d+)"#) { (matches: [String]) -> String in
+      .replacePattern(#"(?:^|\W)\/(\d+)"#) { (matches: [String]) -> String in
         "1/\(matches[1])"
-      }.replace(#"(?<=\w+)\/(\d+)"#) { (matches: [String]) -> String in
+      }.replacePattern(#"(?<=\w+)\/(\d+)"#) { (matches: [String]) -> String in
         "1/\(matches[1])"
       }
 
@@ -241,7 +241,7 @@ class EnglishProvider: Provider {
     // Processes the suffixes for magnitudes
     string = andition(string) // first andition, for the tens before the hundreds
     for (pattern, num) in BIG_SUFFIXES {
-      string = string.replace(#"(?:<num>)?(\d*)\s?\#(pattern)"#) { (matches: [String]) -> String in
+      string = string.replacePattern(#"(?:<num>)?(\d*)\s?\#(pattern)"#) { (matches: [String]) -> String in
         let base: Int = Int(matches[1]) ?? 1
         let total: Int = num * base
         return "<num>\(String(total))"
@@ -268,7 +268,7 @@ class EnglishProvider: Provider {
     var string: String = text.copy() as! String
 
     // Remove leftover `<num>`s in the string
-    string = string.replace("<num>", replacement: "")
+    string = string.replacePattern("<num>", replacement: "")
 
     return string
   }
@@ -294,7 +294,7 @@ class EnglishProvider: Provider {
       in: string,
       range: NSRange(location: 0, length: string.utf16.count)
     ).count > 0 {
-      string = string.replace(pattern) { (matches: [String]) -> String in
+      string = string.replacePattern(pattern) { (matches: [String]) -> String in
         let one: String = matches[1]
         let two: String = matches[3]
         let conjunction: String = matches[2]

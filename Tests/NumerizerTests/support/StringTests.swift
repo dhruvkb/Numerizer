@@ -18,7 +18,7 @@ final class StringTests: XCTestCase {
   }
 
   func testReplaceDynamic() {
-    let string = "Hello, World!".replace(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
+    let string = "Hello, World!".replacePattern(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
       let one: String = matches[1]
       let two: String = matches[2]
       return "\(two), \(one)"
@@ -26,22 +26,29 @@ final class StringTests: XCTestCase {
     XCTAssertEqual(string, "World, Hello!")
   }
 
-  func testNoOccurrences() {
-    let string = "Hello, World!".replace("x") { (matches: [String]) -> String in
-      "y"
+  func testReplaceCaseInsensitive() {
+    let string = "Hello, World!".replacePattern("hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
+      "Hi"
     }
-    XCTAssertEqual(string, "Hello, World!")
+    XCTAssertEqual(string, "Hi, World!")
   }
 
-  func testMultipleOccurrences() {
-    let string = "Hello, hello!".replace("ello") { (matches: [String]) -> String in
+  func testReplaceMultipleOccurrences() {
+    let string = "Hello, hello!".replacePattern("ello") { (matches: [String]) -> String in
       "ola"
     }
     XCTAssertEqual(string, "Hola, hola!")
   }
 
+  func testReplaceNoOccurrences() {
+    let string = "Hello, World!".replacePattern("x") { (matches: [String]) -> String in
+      "y"
+    }
+    XCTAssertEqual(string, "Hello, World!")
+  }
+
   func testReplaceStatic() {
-    let string = "Hello, World!".replace("World", replacement: "Dhruv")
+    let string = "Hello, World!".replacePattern("World", replacement: "Dhruv")
     XCTAssertEqual(string, "Hello, Dhruv!")
   }
 }
