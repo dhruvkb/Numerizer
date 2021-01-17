@@ -6,7 +6,7 @@
  which determines the provider that will be used to parse the string.
 
  ```swift
- let numerizer: Numerizer = try! Numerizer(localeChoice: LocaleChoice.en)
+ let numerizer: Numerizer = try! Numerizer(numberingSystem: NumberingSystem.latn)
  numerizer.numerize("forty two")
  // "42"
  ```
@@ -18,8 +18,8 @@ public class Numerizer {
   let provider: Provider
 
   /// Mapping of locale choices to the provider for that particular locale
-  private let providers: [LocaleChoice: Provider.Type] = [
-    LocaleChoice.en: EnglishProvider.self
+  private let providers: [NumberingSystem: Provider.Type] = [
+    NumberingSystem.latn: EnglishProvider.self
   ]
 
   /**
@@ -31,9 +31,9 @@ public class Numerizer {
              an associated provider
    */
   public init(
-    localeChoice: LocaleChoice = LocaleChoice.en
+    numberingSystem: NumberingSystem = NumberingSystem.latn
   ) throws {
-    guard let Provider: Provider.Type = providers[localeChoice] else {
+    guard let Provider: Provider.Type = providers[numberingSystem] else {
       throw NumerizerError.unsupportedNumberingSystem
     }
     self.provider = Provider.init()
