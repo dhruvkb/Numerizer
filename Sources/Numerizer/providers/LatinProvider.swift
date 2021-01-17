@@ -13,6 +13,7 @@ import Foundation
 class LatinProvider: Provider {
   required init() {}
 
+  /// Numbers that have non-algorithmic names and warrant direct replacement
   private let DIRECT_NUMS: [(pattern: String, num: Int)] = [
     (pattern: "zero",               num:  0),
     (pattern: "ten",                num: 10),
@@ -27,6 +28,7 @@ class LatinProvider: Provider {
     (pattern: "nineteen",           num: 19),
   ]
 
+  /// One digit numbers, except zero because it cannot occupy ones' place
   private let SINGLE_NUMS: [(pattern: String, num: Int)] = [
     (pattern: "one",                num: 1),
     (pattern: "two",                num: 2),
@@ -39,6 +41,7 @@ class LatinProvider: Provider {
     (pattern: "nine",               num: 9),
   ]
 
+  /// Tens' place prefixes for two digit numbers
   private let TENS_PREFIXES: [(pattern: String, num: Int)] = [
     (pattern: "twenty",             num: 2),
     (pattern: "thirty",             num: 3),
@@ -50,6 +53,7 @@ class LatinProvider: Provider {
     (pattern: "ninety",             num: 9),
   ]
 
+  /// Powers of ten that represent magnitude
   private let BIG_SUFFIXES: [(pattern: String, num: Int)] = [
     (pattern: "hundred",            num: Int(1e2)),
     (pattern: "thousand",           num: Int(1e3)),
@@ -60,6 +64,7 @@ class LatinProvider: Provider {
     (pattern: "trillion",           num: Int(1e12)),
   ]
 
+  /// Fractional variants of `DIRECT_NUMS`
   private let DIRECT_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "tenths?",            num: 10),
     (pattern: "elevenths?",         num: 11),
@@ -73,6 +78,7 @@ class LatinProvider: Provider {
     (pattern: "nineteenths?",       num: 19),
   ]
 
+  /// Fractional variants of `SINGLE_NUMS`
   private let SINGLE_NUM_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "hal(f|ves)",         num: 2),
     (pattern: "thirds?",            num: 3),
@@ -84,6 +90,7 @@ class LatinProvider: Provider {
     (pattern: "ninths?",            num: 9),
   ]
 
+  /// Fractional variants of `TENS_PREFIXES`
   private let TENS_PREFIX_FRACTIONS: [(pattern: String, num: Int)] = [
     (pattern: "twentieths?",        num: 20),
     (pattern: "thirtieths?",        num: 30),
