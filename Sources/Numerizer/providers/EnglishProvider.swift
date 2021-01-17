@@ -284,7 +284,7 @@ class EnglishProvider: Provider {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
-    let pattern: String = #"<num>(\d+)(\s|\sand\s)<num>(\d+)(?=$|\W)"#
+    let pattern: String = #"<num>(\d+)\s?(|and\s?)<num>(\d+)(?=$|\W)"#
     while string.matches(pattern: pattern) {
       let replacedString: String = string.replace(pattern: pattern) { (matches: [String]) -> String in
         let one: String = matches[1]

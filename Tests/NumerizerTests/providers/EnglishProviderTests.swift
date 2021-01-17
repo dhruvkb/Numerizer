@@ -472,6 +472,10 @@ final class EnglishProviderTests: XCTestCase {
   func testComplexIntCombinations() {
     let testCases: [String: Int] = [
       "a thousand and a hundred": 1100, // non-trailing 'a's
+      "thousand and hundred":     1100, // no multipliers or articles
+      "thousand hundred":         1100, // no conjunctions
+      "lakh thousand hundred":  101100, // longer chain of suffixes
+      "two and hundred":           102, // addition using 'and'
       "nine hundred ninety nine":  999, // missing 'and'
       "twentyone":                  21, // no spaces
       "100 thousand":         Int(1e5), // numbers and strings
