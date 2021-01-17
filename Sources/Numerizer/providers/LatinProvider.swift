@@ -110,29 +110,71 @@ class LatinProvider: Provider {
    * combines multiple spaces
    * mutilates hyphenated words
    * removes trailing articles
+   * trims whitespaces
 
    - Parameters:
      - text: the string to prepare for processing
+   - Returns: text prepared for processing
    */
   func preProcess(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
-    // Lowercases the string
-    string = string.lowercased()
-
-    // Combines multiple spaces
-    string = string.replace(pattern: #"\s+"#, with: " ")
-
-    // Mutilates hyphenated words
-    string = string.replace(pattern: #"([^\d])-([^\d])"#) { (matches: [String]) -> String in
-      "\(matches[1]) \(matches[2])"
-    }
-
-    // Removes trailing articles
     string = string
-      .replace(pattern: #"\ban?$"#, with: "")
-      .trimmingCharacters(in: .whitespacesAndNewlines)
+      .lowercased() // Lowercases the string
+      .replace(pattern: #"\s+"#, with: " ") // Combines multiple spaces
+      .replace(pattern: #"([^\d])-([^\d])"#) { (matches: [String]) -> String in
+        "\(matches[1]) \(matches[2])"
+      } // Mutilates hyphenated words
+      .replace(pattern: #"\ban?$"#, with: "") // Removes trailing articles
+      .trimmingCharacters(in: .whitespacesAndNewlines) // Trims whitespaces
+
+    return string
+  }
+
+  /**
+   Performs the actual processing on the string.
+
+   The function performs the following operations on the given string:
+   * numerizes numerals
+   * numerizes fractions
+   * numerizes big suffixes
+
+   - Parameters:
+     - text: the string to process
+   - Returns: processed text
+   */
+  func process(_ text: String) -> String {
+    /// Mutable copy of the text passed as argument
+    var string: String = text.copy() as! String
+
+    // Numerizes numerals
+    string = numerizeNumerals(string)
+    // Numerizes fractions
+    string = numerizeFractions(string)
+    // Numerizes big suffixes
+    string = numerizeBigSuffixes(string)
+
+    return string
+  }
+
+  /**
+   Cleans up the given string after processing.
+
+   The function performs the following operations on the given string:
+   * perform a final andition
+   * remove leftover `<num>`s in the string
+
+   - Parameters:
+     - text: the string to clean up after processing
+   - Returns: text cleaned-up after processing
+   */
+  func postProcess(_ text: String) -> String {
+    /// Mutable copy of the text passed as argument
+    var string: String = text.copy() as! String
+
+    // Remove leftover `<num>`s in the string
+    string = string.replace(pattern: "<num>", with: "")
 
     return string
   }
@@ -149,7 +191,7 @@ class LatinProvider: Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  func numerizeNumerals(_ text: String) -> String {
+  private func numerizeNumerals(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -206,7 +248,7 @@ class LatinProvider: Provider {
    - Parameters:
      - text: the string from which to parse fractions
    */
-  func numerizeFractions(_ text: String) -> String {
+  private func numerizeFractions(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -246,7 +288,7 @@ class LatinProvider: Provider {
    - Parameters:
      - text: the string from which to parse numerals
    */
-  func numerizeBigSuffixes(_ text: String) -> String {
+  private func numerizeBigSuffixes(_ text: String) -> String {
     /// Mutable copy of the text passed as argument
     var string: String = text.copy() as! String
 
@@ -261,26 +303,6 @@ class LatinProvider: Provider {
       string = andition(string)
     }
     string = andition(string) // final andition, for any 'and's that may remain
-
-    return string
-  }
-
-  /**
-   Cleans up the given string after processing.
-
-   The function performs the following operations on the given string:
-   * perform a final andition
-   * remove leftover `<num>`s in the string
-
-   - Parameters:
-     - text: the string to clean up after processing
-   */
-  func postProcess(_ text: String) -> String {
-    /// Mutable copy of the text passed as argument
-    var string: String = text.copy() as! String
-
-    // Remove leftover `<num>`s in the string
-    string = string.replace(pattern: "<num>", with: "")
 
     return string
   }
