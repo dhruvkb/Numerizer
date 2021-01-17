@@ -12,12 +12,12 @@ extension String {
    `NSRegularExpression.Options`.
 
    ```swift
-   "Hello, World!".matchesPattern("Hello")
+   "Hello, World!".matches(pattern: "Hello")
    // true
    ```
 
    ```swift
-   "Hello, World!".matchesPattern("Hi")
+   "Hello, World!".matches(pattern: "Hi")
    // false
    ```
 
@@ -25,18 +25,18 @@ extension String {
    instance.
 
    ```swift
-   "Hello, World!".matchesPattern("hELLO", options: [.caseInsensitive])
+   "Hello, World!".matches(pattern: "hELLO", options: [.caseInsensitive])
    // true
    ```
 
    - Authors: Dhruv Bhanushali
    - Parameters:
-     - pattern: the pattern to replace in the string
+     - pattern: the pattern to search for in the string
      - options: the options to use for the regex pattern
-   - Returns: Whether the string contains the pattern
+   - Returns: whether the string contains the pattern
    */
-  public func matchesPattern(
-    _ pattern: String,
+  public func matches(
+    pattern: String,
     options: NSRegularExpression.Options = []
   ) -> Bool {
     guard let regex: NSRegularExpression = try? NSRegularExpression(
@@ -61,7 +61,7 @@ extension String {
    argument and returns a replacement.
 
    ```swift
-   "Hello, World!".replacePattern(#"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
+   "Hello, World!".replace(pattern: #"(\w+),\s(\w+)"#) { (matches: [String]) -> String in
      let one: String = matches[1]
      let two: String = matches[2]
      return "\(two), \(one)"
@@ -73,7 +73,7 @@ extension String {
    instance.
 
    ```swift
-   "Hello, World!".replacePattern("hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
+   "Hello, World!".replace(pattern: "hELLO", options: [.caseInsensitive]) { (matches: [String]) -> String in
      "Hi"
    }
    // "Hi, World!"
@@ -82,7 +82,7 @@ extension String {
    This function replaces all occurrences of the pattern.
 
    ```swift
-   "Hello, hello!".replacePattern("ello") { (matches: [String]) -> String in
+   "Hello, hello!".replace(pattern: "ello") { (matches: [String]) -> String in
      "ola"
    }
    // "Hola, hola!"
@@ -100,10 +100,10 @@ extension String {
        - 1...n: capturing groups 1 through n
    - Returns: A new string with the occurrences replaced
    */
-  public func replacePattern(
-    _ pattern: String,
+  public func replace(
+    pattern: String,
     options: NSRegularExpression.Options = [],
-    replacer: (_ matches: [String]) -> String
+    through replacer: (_ matches: [String]) -> String
   ) -> String {
     guard let regex: NSRegularExpression = try? NSRegularExpression(
       pattern: pattern,
@@ -161,10 +161,12 @@ extension String {
    Replace the given pattern with a static replacement string.
 
    This is a convenience method that accepts a pattern string, an optional
-   instance of `NSRegularExpression.Options` and a replacement string.
+   instance of `NSRegularExpression.Options` and a replacement string. This is
+   equivalent to `replace(pattern, options, replacer)` where the closure
+   `replacer` returns a constant string `replacement`.
 
    ```swift
-   "Hello, World!".replacePattern("World", replacement: "Dhruv")
+   "Hello, World!".replace(pattern: "World", with: "Dhruv")
    // "Hello, Dhruv!"
    ```
 
@@ -174,15 +176,15 @@ extension String {
    - Parameters:
      - pattern: the pattern to replace in the string
      - options: the options to use for the regex pattern
-     - replacement: the string to replace the matching pattern
+     - replacement: the string with which to replace the matching pattern
    - Returns: A new string with the occurrences replaced
    */
-  public func replacePattern(
-    _ pattern: String,
+  public func replace(
+    pattern: String,
     options: NSRegularExpression.Options = [],
-    replacement: String
+    with replacement: String
   ) -> String {
-    replacePattern(pattern, options: options) { _ -> String in
+    replace(pattern: pattern, options: options) { _ -> String in
       replacement
     }
   }
