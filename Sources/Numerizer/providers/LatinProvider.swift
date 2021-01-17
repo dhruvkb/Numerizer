@@ -1,11 +1,16 @@
 import Foundation
 
 /**
- Holds constants pertaining to the English Indo-Arabic decimal number system.
+ Holds constants pertaining to the Latin numbering system.
+
+ This provider is capable of parsing Indo-Arabic decimal numbers written in the
+ English language to Latin numerals.
+
+ *Numerals:* 0 1 2 3 4 5 6 7 8 9 0
 
  - Authors: Dhruv Bhanushali
  */
-class EnglishProvider: Provider {
+class LatinProvider: Provider {
   required init() {}
 
   private let DIRECT_NUMS: [(pattern: String, num: Int)] = [

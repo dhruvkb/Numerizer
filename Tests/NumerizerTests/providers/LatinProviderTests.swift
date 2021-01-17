@@ -1,8 +1,8 @@
 import XCTest
 @testable import Numerizer
 
-final class EnglishProviderTests: XCTestCase {
-  var provider: EnglishProvider = EnglishProvider()
+final class LatinProviderTests: XCTestCase {
+  var provider: LatinProvider = LatinProvider()
 
   /*
    preProcess

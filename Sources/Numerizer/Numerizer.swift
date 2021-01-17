@@ -19,7 +19,7 @@ public class Numerizer {
 
   /// Mapping of locale choices to the provider for that particular locale
   private let providers: [NumberingSystem: Provider.Type] = [
-    NumberingSystem.latn: EnglishProvider.self
+    NumberingSystem.latn: LatinProvider.self
   ]
 
   /**
