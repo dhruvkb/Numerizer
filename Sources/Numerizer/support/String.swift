@@ -98,7 +98,7 @@ extension String {
      - matches: an array containing:
        - 0: the entire matching substring
        - 1...n: capturing groups 1 through n
-   - Returns: A new string with the occurrences replaced
+   - Returns: a new string with the occurrences replaced
    */
   public func replace(
     pattern: String,
@@ -177,7 +177,7 @@ extension String {
      - pattern: the pattern to replace in the string
      - options: the options to use for the regex pattern
      - replacement: the string with which to replace the matching pattern
-   - Returns: A new string with the occurrences replaced
+   - Returns: a new string with the occurrences replaced
    */
   public func replace(
     pattern: String,
