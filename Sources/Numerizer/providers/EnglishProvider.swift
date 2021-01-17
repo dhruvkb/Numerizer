@@ -286,7 +286,7 @@ class EnglishProvider: Provider {
 
     let pattern: String = #"<num>(\d+)(\s|\sand\s)<num>(\d+)(?=$|\W)"#
     while string.matches(pattern: pattern) {
-      string = string.replace(pattern: pattern) { (matches: [String]) -> String in
+      let replacedString: String = string.replace(pattern: pattern) { (matches: [String]) -> String in
         let one: String = matches[1]
         let two: String = matches[3]
         let conjunction: String = matches[2]
@@ -298,6 +298,11 @@ class EnglishProvider: Provider {
         } else {
           return matches[0] // the string, as it was
         }
+      }
+      if replacedString == string {
+        break
+      } else {
+        string = replacedString
       }
     }
 
