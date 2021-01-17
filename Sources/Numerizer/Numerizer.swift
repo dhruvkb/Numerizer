@@ -34,7 +34,7 @@ public class Numerizer {
     localeChoice: LocaleChoice = LocaleChoice.en
   ) throws {
     guard let Provider: Provider.Type = providers[localeChoice] else {
-      throw NumerizerErrors.unsupportedLocale
+      throw NumerizerError.unsupportedNumberingSystem
     }
     self.provider = Provider.init()
   }
