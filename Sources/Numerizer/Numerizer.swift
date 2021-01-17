@@ -47,11 +47,6 @@ public class Numerizer {
    - Returns: A new string with the numeric words replaced with numbers
    */
   public func parse(_ text: String) -> String {
-    provider.process(text)
-  }
-
-  @available(*, deprecated, renamed: "parse")
-  public func numerize(_ text: String) -> String {
-    parse(text)
+    provider.parse(text)
   }
 }
